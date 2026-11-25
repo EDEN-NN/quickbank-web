@@ -1,0 +1,31 @@
+<div class="wrap">
+  @if (loading()) {
+    <p class="status" role="status">Loading the statement…</p>
+  } @else if (loadError(); as problem) {
+    <section class="banner bad" role="alert">
+      <h2>{{ problem.title }}</h2>
+      <p>{{ problem.detail }}</p>
+    </section>
+    <button type="button" class="quiet" (click)="load()">Try again</button>
+  } @else if (account() === null) {
+    <section class="card">
+      <p class="eyebrow">No account yet</p>
+      <h1>Open an account to read a statement.</h1>
+      <p>Movements appear here after you deposit cash or transfer with someone else. Nothing is listed until the account exists.</p>
+      <a class="button" routerLink="/account">Open my account</a>
+    </section>
+  } @else if (account(); as account) {
+    <p class="eyebrow">Extract</p>
+    <h1>Statement for <span class="mono">{{ account.accountNumber }}</span></h1>
+    <p class="muted">
+      Dated movements with type, amount, counterparty, and the cash balance after each one. Times are America/Sao_Paulo.
+      Oldest first.
+    </p>
+    <section class="card">
+      <app-statement-table
+        [lines]="lines()"
+        emptyText="No movements yet. Deposit cash or receive a transfer and the line will appear here, oldest first."
+      />
+    </section>
+  }
+</div>

@@ -1,0 +1,32 @@
+<div class="wrap narrow">
+  <p class="eyebrow">Simulated bank</p>
+  <h1>Cash and credit, on a ledger you can trace.</h1>
+  <p class="lede">
+    Sign in with Keycloak, open an account, deposit cash, and transfer it to the other demo customer.
+    Payment processing and email are mocks. Nothing on this screen moves real money.
+  </p>
+
+  @if (auth.initError(); as message) {
+    <section class="banner bad" role="alert">
+      <h2>Keycloak did not answer</h2>
+      <p>{{ message }}</p>
+    </section>
+  }
+
+  @if (auth.signedIn()) {
+    <p>You are signed in as <strong>{{ auth.username() }}</strong>.</p>
+    <p><a class="button" routerLink="/account">Go to your account</a></p>
+  } @else {
+    <p><button type="button" (click)="auth.signIn()">Sign in with Keycloak</button></p>
+  }
+
+  <section class="card">
+    <h2>Demo users</h2>
+    <p>Both have the realm role <span class="mono">CLIENT</span>. Neither has an account until you ask.</p>
+    <ul class="users">
+      <li><strong>ana</strong> / ana <span>ana&#64;quickbank.local</span></li>
+      <li><strong>bruno</strong> / bruno <span>bruno&#64;quickbank.local</span></li>
+    </ul>
+    <p class="muted">Use a second browser profile for the counterparty. Transfers need that person's 8-digit account number.</p>
+  </section>
+</div>

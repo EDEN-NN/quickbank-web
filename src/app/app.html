@@ -1,0 +1,20 @@
+<header class="site">
+  <a class="mark" routerLink="/">QuickBank</a>
+  <nav>
+    @if (auth.signedIn()) {
+      <a routerLink="/account">Account</a>
+      <a routerLink="/statement">Statement</a>
+    } @else {
+      <button type="button" class="link" (click)="auth.signIn()">Sign in</button>
+    }
+  </nav>
+  @if (auth.signedIn()) {
+    <div class="session">
+      @if (auth.username(); as name) {
+        <span class="who">{{ name }}</span>
+      }
+      <button type="button" class="quiet" (click)="auth.signOut()">Sign out</button>
+    </div>
+  }
+</header>
+<router-outlet />

@@ -1,0 +1,28 @@
+@if (lines().length === 0) {
+  <p>{{ emptyText() }}</p>
+} @else {
+  <table class="statement">
+    <thead>
+      <tr>
+        <th>When</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Counterparty</th>
+        <th>Running balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (line of lines(); track line.id) {
+        <tr>
+          <td data-label="When">{{ formatWhen(line.occurredAt) }}</td>
+          <td data-label="Type">{{ movementLabel(line.type) }}</td>
+          <td data-label="Amount" [class.outgoing]="line.type === 'TRANSFER_OUT'">
+            {{ signedAmount(line.type, line.amount) }}
+          </td>
+          <td data-label="Counterparty" class="mono">{{ line.counterparty }}</td>
+          <td data-label="Running balance">{{ formatBrl(line.runningBalance) }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

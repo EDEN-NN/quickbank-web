@@ -1,0 +1,133 @@
+<div class="wrap">
+  @if (loading()) {
+    <p class="status" role="status">Loading your account…</p>
+  } @else if (loadError(); as problem) {
+    <section class="banner bad" role="alert">
+      <h2>{{ problem.title }}</h2>
+      <p>{{ problem.detail }}</p>
+    </section>
+    <button type="button" class="quiet" (click)="load()">Try again</button>
+  } @else if (account() === null) {
+    @if (actionError(); as problem) {
+      <section class="banner bad" role="alert">
+        <h2>{{ problem.title }}</h2>
+        <p>{{ problem.detail }}</p>
+      </section>
+    }
+    <section class="card">
+      <p class="eyebrow">No account yet</p>
+      <h1>Open a QuickBank account.</h1>
+      <p>
+        It takes a second. Cash starts at R$&nbsp;0,00 and the credit line is R$&nbsp;2.000,00. Credit used starts at
+        zero. Transfers spend cash, not credit. We do not create this account until you ask.
+      </p>
+      <button type="button" (click)="openAccount()" [disabled]="opening()">
+        {{ opening() ? 'Opening…' : 'Open my account' }}
+      </button>
+    </section>
+  } @else if (account(); as account) {
+    @if (actionError(); as problem) {
+      <section class="banner bad" role="alert">
+        <h2>{{ problem.title }}</h2>
+        <p>{{ problem.detail }}</p>
+      </section>
+    }
+    @if (notice(); as message) {
+      <section class="banner good" role="status">
+        <p>{{ message }}</p>
+      </section>
+    }
+    @if (depositWatch(); as watch) {
+      <section class="banner" role="status">
+        <h2>Deposit {{ watch.status === 'POSTED' ? 'posted' : 'accepted' }}</h2>
+        <p>
+          {{ formatBrl(watch.amount) }} on {{ watch.accountNumber }}. Status {{ watch.status }}. Reference
+          <span class="mono">{{ watch.depositId }}</span>.
+          @if (watch.status !== 'POSTED') {
+            The mock payment port is posting it. Cash updates when the ledger finishes.
+          }
+        </p>
+      </section>
+    }
+
+    <p class="eyebrow">Signed in as {{ account.ownerName }}</p>
+    <h1>Account <span class="mono">{{ account.accountNumber }}</span></h1>
+    <p class="muted">
+      Times on the statement are America/Sao_Paulo. Cash is what you can transfer. Credit is a separate snapshot and
+      is not spent in this demo.
+    </p>
+    <div class="balances">
+      <article class="balance cash">
+        <span>Cash available</span>
+        <div class="figure">{{ formatBrl(account.cashAvailable) }}</div>
+      </article>
+      <article class="balance credit">
+        <span>Credit limit</span>
+        <div class="figure">{{ formatBrl(account.creditLimit) }}</div>
+      </article>
+      <article class="balance">
+        <span>Credit used</span>
+        <div class="figure">{{ formatBrl(account.creditUsed) }}</div>
+      </article>
+      <article class="balance">
+        <span>Credit available</span>
+        <div class="figure">{{ formatBrl(account.creditAvailable) }}</div>
+      </article>
+    </div>
+
+    <div class="split">
+      <form class="card" (submit)="deposit($event)">
+        <h2>Deposit cash</h2>
+        <p class="muted">The mock payment port waits a moment and always approves. The balance updates after the ledger posts.</p>
+        <label for="deposit-amount">Amount in BRL
+          <input
+            id="deposit-amount"
+            [value]="depositAmount()"
+            (input)="depositAmount.set(inputValue($event))"
+            inputmode="decimal"
+            autocomplete="off"
+            placeholder="100.00"
+            [disabled]="depositing()"
+          />
+        </label>
+        <button type="submit" [disabled]="depositing()">{{ depositing() ? 'Depositing…' : 'Deposit' }}</button>
+      </form>
+      <form class="card" (submit)="transfer($event)">
+        <h2>Transfer</h2>
+        <p class="muted">Use the other person's account number. You cannot transfer to yourself, and cash that is not there is rejected.</p>
+        <label for="transfer-to">To account
+          <input
+            id="transfer-to"
+            [value]="transferTo()"
+            (input)="transferTo.set(inputValue($event))"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="10000002"
+            [disabled]="transferring()"
+          />
+        </label>
+        <label for="transfer-amount">Amount in BRL
+          <input
+            id="transfer-amount"
+            [value]="transferAmount()"
+            (input)="transferAmount.set(inputValue($event))"
+            inputmode="decimal"
+            autocomplete="off"
+            placeholder="25.00"
+            [disabled]="transferring()"
+          />
+        </label>
+        <button type="submit" [disabled]="transferring()">{{ transferring() ? 'Sending…' : 'Send' }}</button>
+      </form>
+    </div>
+
+    <section class="card stack">
+      <h2>Recent movements</h2>
+      <app-statement-table
+        [lines]="recent()"
+        emptyText="No movements yet. A deposit or a transfer will show up here with the running cash balance."
+      />
+      <p><a routerLink="/statement">Full statement</a></p>
+    </section>
+  }
+</div>

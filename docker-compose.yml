@@ -1,0 +1,9 @@
+# Angular app only. The browser still calls the API on http://localhost:8088
+# and Keycloak on http://localhost:8080. Those services stay in the backend compose.
+name: quickbank-web
+
+services:
+  web:
+    build: .
+    ports:
+      - "4280:80"
