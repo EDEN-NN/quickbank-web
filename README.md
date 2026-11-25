@@ -8,11 +8,11 @@ O navegador chama a API e o Keycloak nos host ports. Não use nomes DNS do Compo
 
 Rotas em `src/app/app.routes.ts`. `/account` e `/statement` passam por `authGuard`. Sem sessão, o guard volta para `/`. Qualquer outro caminho também redireciona para `/`.
 
-O interceptor em `src/app/core/auth.interceptor.ts` manda `Authorization: Bearer` em toda chamada cujo URL começa com `apiBaseUrl`.
+O interceptor em `src/app/core/auth.interceptor.ts` manda `Authorization: Bearer` nas chamadas cujo URL começa com `apiBaseUrl`, exceto `POST /api/auth/login`, `POST /api/auth/registrations` e `POST /api/auth/refresh`.
 
 | Rota | Tela | API |
 | --- | --- | --- |
-| `/` | Entrada. Botão de login no Keycloak, ou link para a conta se a sessão já existe. Lista `ana` e `bruno`. Não chama a API. | — |
+| `/` | Entrada. Nome QuickBank no topo. Formulário de usuário e senha à esquerda do centro. Ao lado, painel de cadastro. | `POST /api/auth/login`. Cadastro: `POST /api/auth/registrations` |
 | `/account` | Abre a conta se o usuário ainda não tem uma. Com conta, mostra caixa e crédito, depósito, transferência e os 5 movimentos mais recentes. | `GET /api/accounts/me`, `GET /api/accounts/me/statement`, `POST /api/accounts`, `POST /api/accounts/me/deposits`, `GET /api/deposits/{id}`, `POST /api/transfers` |
 | `/statement` | Extrato completo, do mais antigo para o mais novo. Se não houver conta, só aponta de volta para `/account`. | `GET /api/accounts/me`, `GET /api/accounts/me/statement` |
 
@@ -22,7 +22,9 @@ Caixa é o que a transferência gasta. Crédito aparece separado e não é debit
 
 ## Keycloak
 
-Cliente público `quickbank-spa`, realm `quickbank`. Fluxo authorization code com PKCE (`pkceMethod` `S256`), `scope` `profile email`, `responseMode` `query`. O redirect depois do login é `{origem}/account`. O logout volta para `{origem}/`.
+O formulário da entrada chama `POST /api/auth/login`. A API troca usuário e senha por um JWT no grant de senha do cliente confidencial `quickbank-web`. Este bundle não guarda o segredo. O cliente público `quickbank-spa` continua no realm `quickbank` para authorization code com PKCE (`pkceMethod` `S256`, `scope` `profile email`, `responseMode` `query`) se a aplicação receber um redirect. O logout volta para `{origem}/`.
+
+Cadastro: `POST /api/auth/registrations` com `username`, `email`, `firstName`, `lastName` e `password` (8 a 72 caracteres). Nome e sobrenome são obrigatórios porque o perfil do Keycloak recusa o login sem eles. E-mail repetido volta o tipo `email-already-registered`. Usuário repetido volta `registration-rejected`, sem dizer que o usuário existe. A recuperação de senha não está implementada.
 
 Os dois usuários de demonstração têm o papel de realm `CLIENT`. Nenhum tem conta até abrir uma pela tela.
 
@@ -33,7 +35,7 @@ Os dois usuários de demonstração têm o papel de realm `CLIENT`. Nenhum tem c
 
 Para transferir, use outro perfil de navegador na conta da outra pessoa. A transferência pede o número de 8 dígitos dessa conta.
 
-O cliente confidencial `quickbank-web` fica no backend Thymeleaf. Este bundle não usa esse segredo.
+O cliente confidencial `quickbank-web` fica no backend. Este bundle não usa esse segredo.
 
 ## Portas
 

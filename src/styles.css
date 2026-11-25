@@ -107,6 +107,95 @@ th { color: var(--muted); font-size: 0.78rem; font-weight: 600; text-transform: 
 @media (max-width: 900px) {
   .balances { grid-template-columns: 1fr 1fr; }
 }
+body:has(.gate) {
+  background: #09080d;
+}
+body:has(.gate) .site {
+  background: #09080d;
+  border-bottom-color: #3c2a5c;
+}
+body:has(.gate) .mark,
+body:has(.gate) .site nav a,
+body:has(.gate) .who {
+  color: #f3ecff;
+}
+body:has(.gate) button.quiet {
+  color: #f3ecff;
+  border-color: #5c457f;
+}
+.gate {
+  min-height: calc(100vh - 4.2rem);
+  padding: 2.75rem 1.25rem 3rem 7vw;
+  background:
+    radial-gradient(880px 420px at 8% -8%, rgba(88, 52, 140, 0.42), transparent 62%),
+    radial-gradient(640px 360px at 86% 120%, rgba(36, 18, 58, 0.85), transparent 58%),
+    #09080d;
+}
+.gate-row {
+  width: min(860px, 100%);
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(280px, 400px);
+  gap: 1.35rem;
+  align-items: start;
+}
+.gate .panel {
+  background: #120e18;
+  border: 1px solid #4a356e;
+  border-left: 4px solid #5c3d8a;
+  border-radius: 0;
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.35);
+  padding: 1.2rem 1.15rem 1.3rem;
+}
+.gate .panel.register {
+  background: #16111f;
+  border-left-color: #c4b0e0;
+}
+.gate h1,
+.gate h2 {
+  color: #f6f1ff;
+  font-size: 1.45rem;
+  line-height: 1.25;
+  margin-bottom: 0.9rem;
+}
+.gate label { color: #ddd0f2; }
+.gate .hint { color: #a898c4; font-size: 0.8rem; font-weight: 400; }
+.gate input {
+  background: #09080d;
+  color: #f7f2ff;
+  border: 1px solid #4d3a70;
+  border-radius: 0;
+}
+.gate input:focus-visible,
+.gate button:focus-visible,
+.gate a:focus-visible {
+  outline: 2px solid #c4b0e0;
+  outline-offset: 2px;
+}
+.gate button {
+  background: #3b255c;
+  color: #f6f0ff;
+  border: 1px solid #c4b0e0;
+  border-radius: 0;
+}
+.gate .alert {
+  color: #f3e7ff;
+  background: #2a1438;
+  border: 1px solid #8d6bb8;
+  border-radius: 0;
+  padding: 0.7rem 0.75rem;
+  margin: 0 0 0.85rem;
+}
+.gate .alert a { color: #e4d4ff; }
+
+@media (max-width: 800px) {
+  .gate { padding: 1.25rem 0.9rem 2rem; }
+  .gate-row {
+    grid-template-columns: 1fr;
+    width: min(480px, 100%);
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 720px) {
   .site { flex-wrap: wrap; }
   .session { margin-left: 0; }

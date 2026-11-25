@@ -4,8 +4,6 @@
     @if (auth.signedIn()) {
       <a routerLink="/account">Account</a>
       <a routerLink="/statement">Statement</a>
-    } @else {
-      <button type="button" class="link" (click)="auth.signIn()">Sign in</button>
     }
   </nav>
   @if (auth.signedIn()) {

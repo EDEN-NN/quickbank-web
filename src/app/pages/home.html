@@ -1,32 +1,99 @@
-<div class="wrap narrow">
-  <p class="eyebrow">Simulated bank</p>
-  <h1>Cash and credit, on a ledger you can trace.</h1>
-  <p class="lede">
-    Sign in with Keycloak, open an account, deposit cash, and transfer it to the other demo customer.
-    Payment processing and email are mocks. Nothing on this screen moves real money.
-  </p>
+<div class="gate" lang="pt-BR">
+  <div class="gate-row">
+    <form class="panel login" (submit)="submitLogin($event)">
+      <h1>Entrar</h1>
+      @if (loginFailed()) {
+        <p class="alert" role="alert">Não foi possível acessar sua conta. Login ou senha invalidos.</p>
+      }
+      <label for="login-username">Usuário
+        <input
+          id="login-username"
+          name="username"
+          autocomplete="username"
+          [value]="loginUsername()"
+          (input)="loginUsername.set(valueOf($event))"
+          [disabled]="submittingLogin()"
+        />
+      </label>
+      <label for="login-password">Senha
+        <input
+          id="login-password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          [value]="loginPassword()"
+          (input)="loginPassword.set(valueOf($event))"
+          [disabled]="submittingLogin()"
+        />
+      </label>
+      <button type="submit" [disabled]="submittingLogin()">{{ submittingLogin() ? 'Entrando…' : 'Entrar' }}</button>
+    </form>
 
-  @if (auth.initError(); as message) {
-    <section class="banner bad" role="alert">
-      <h2>Keycloak did not answer</h2>
-      <p>{{ message }}</p>
-    </section>
-  }
-
-  @if (auth.signedIn()) {
-    <p>You are signed in as <strong>{{ auth.username() }}</strong>.</p>
-    <p><a class="button" routerLink="/account">Go to your account</a></p>
-  } @else {
-    <p><button type="button" (click)="auth.signIn()">Sign in with Keycloak</button></p>
-  }
-
-  <section class="card">
-    <h2>Demo users</h2>
-    <p>Both have the realm role <span class="mono">CLIENT</span>. Neither has an account until you ask.</p>
-    <ul class="users">
-      <li><strong>ana</strong> / ana <span>ana&#64;quickbank.local</span></li>
-      <li><strong>bruno</strong> / bruno <span>bruno&#64;quickbank.local</span></li>
-    </ul>
-    <p class="muted">Use a second browser profile for the counterparty. Transfers need that person's 8-digit account number.</p>
-  </section>
+    <form class="panel register" (submit)="submitSignup($event)">
+      <h2>Não tem uma conta ainda? Cadastre-se aqui</h2>
+      @if (signupProblem() === 'email') {
+        <p class="alert" role="alert">
+          Esse email já está cadastrado, não gostaria de recuperar sua senha?
+          <a href="#recuperacao-de-senha" (click)="$event.preventDefault()">Recuperação de senha está em desenvolvimento (WIP)</a>
+        </p>
+      } @else if (signupProblem() === 'other') {
+        <p class="alert" role="alert">Não foi possível concluir o cadastro.</p>
+      }
+      <label for="signup-username">Usuário
+        <input
+          id="signup-username"
+          name="username"
+          autocomplete="username"
+          spellcheck="false"
+          [value]="signupUsername()"
+          (input)="signupUsername.set(valueOf($event))"
+          [disabled]="submittingSignup()"
+        />
+      </label>
+      <label for="signup-first-name">Nome
+        <input
+          id="signup-first-name"
+          name="given-name"
+          autocomplete="given-name"
+          [value]="signupFirstName()"
+          (input)="signupFirstName.set(valueOf($event))"
+          [disabled]="submittingSignup()"
+        />
+      </label>
+      <label for="signup-last-name">Sobrenome
+        <input
+          id="signup-last-name"
+          name="family-name"
+          autocomplete="family-name"
+          [value]="signupLastName()"
+          (input)="signupLastName.set(valueOf($event))"
+          [disabled]="submittingSignup()"
+        />
+      </label>
+      <label for="signup-email">E-mail
+        <input
+          id="signup-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          [value]="signupEmail()"
+          (input)="signupEmail.set(valueOf($event))"
+          [disabled]="submittingSignup()"
+        />
+      </label>
+      <label for="signup-password">Senha
+        <input
+          id="signup-password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          [value]="signupPassword()"
+          (input)="signupPassword.set(valueOf($event))"
+          [disabled]="submittingSignup()"
+        />
+        <span class="hint">Mínimo de 8 caracteres.</span>
+      </label>
+      <button type="submit" [disabled]="submittingSignup()">{{ submittingSignup() ? 'Cadastrando…' : 'Cadastrar' }}</button>
+    </form>
+  </div>
 </div>
