@@ -1,14 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/auth.service';
 import { problemFrom } from '../core/problem';
 
 @Component({
   selector: 'app-home',
+  imports: [RouterLink],
   templateUrl: './home.html',
 })
 export class Home {
-  private readonly auth = inject(AuthService);
+  protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
   protected readonly loginUsername = signal('');
@@ -36,7 +37,7 @@ export class Home {
     this.loginFailed.set(false);
     try {
       await this.auth.login(this.loginUsername(), this.loginPassword());
-      await this.router.navigateByUrl('/account');
+      await this.router.navigateByUrl('/');
     } catch {
       this.loginFailed.set(true);
     } finally {
@@ -59,7 +60,7 @@ export class Home {
     try {
       await this.auth.register(username, email, firstName, lastName, password);
       await this.auth.login(username, password);
-      await this.router.navigateByUrl('/account');
+      await this.router.navigateByUrl('/');
     } catch (error) {
       const type = problemFrom(error).type;
       this.signupProblem.set(type.endsWith('/email-already-registered') ? 'email' : 'other');

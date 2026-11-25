@@ -76,7 +76,7 @@
     </div>
 
     <div class="split">
-      <form class="card" (submit)="deposit($event)">
+      <form class="card" id="deposito" (submit)="deposit($event)">
         <h2>Deposit cash</h2>
         <p class="muted">The mock payment port waits a moment and always approves. The balance updates after the ledger posts.</p>
         <label for="deposit-amount">Amount in BRL
@@ -92,7 +92,7 @@
         </label>
         <button type="submit" [disabled]="depositing()">{{ depositing() ? 'Depositing…' : 'Deposit' }}</button>
       </form>
-      <form class="card" (submit)="transfer($event)">
+      <form class="card" id="transferencia" (submit)="transfer($event)">
         <h2>Transfer</h2>
         <p class="muted">Use the other person's account number. You cannot transfer to yourself, and cash that is not there is rejected.</p>
         <label for="transfer-to">To account

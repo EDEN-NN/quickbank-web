@@ -1,0 +1,50 @@
+<div class="wrap narrow" lang="pt-BR">
+  @if (loading()) {
+    <p class="status">Carregando o crédito…</p>
+  } @else if (missing()) {
+    <section class="card">
+      <h1>Crédito</h1>
+      <p>Abra uma conta para consultar o limite.</p>
+      <a class="button" routerLink="/account">Abrir minha conta</a>
+    </section>
+  } @else if (credit(); as credit) {
+    <p class="eyebrow">Limite</p>
+    <h1>Crédito</h1>
+    <div class="balances credit-only">
+      <article class="balance">
+        <span>Em uso</span>
+        <div class="figure">{{ formatBrl(credit.creditUsed) }}</div>
+      </article>
+      <article class="balance credit">
+        <span>Disponível</span>
+        <div class="figure">{{ formatBrl(credit.creditAvailable) }}</div>
+      </article>
+    </div>
+    <form class="card" (submit)="save($event)">
+      <p class="muted">Limite atual {{ formatBrl(credit.creditLimit) }}. O teto desta conta é {{ formatBrl(credit.creditLimitMax) }}.</p>
+      @if (error(); as message) {
+        <p class="alert" role="alert">{{ message }}</p>
+      }
+      @if (notice(); as message) {
+        <p class="banner good" role="status">{{ message }}</p>
+      }
+      <label for="credit-limit">Novo limite
+        <input
+          id="credit-limit"
+          inputmode="decimal"
+          autocomplete="off"
+          [value]="draft()"
+          (input)="draft.set(valueOf($event))"
+          [disabled]="saving()"
+        />
+      </label>
+      <div class="stepper">
+        <button type="button" class="quiet" (click)="step(-1)" [disabled]="saving()">Diminuir</button>
+        <button type="button" class="quiet" (click)="step(1)" [disabled]="saving()">Aumentar</button>
+        <button type="submit" [disabled]="saving()">{{ saving() ? 'Salvando…' : 'Atualizar limite' }}</button>
+      </div>
+    </form>
+  } @else if (error(); as message) {
+    <p class="alert" role="alert">{{ message }}</p>
+  }
+</div>

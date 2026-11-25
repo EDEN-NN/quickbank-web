@@ -1,0 +1,36 @@
+<div class="wrap narrow" lang="pt-BR">
+  @if (loading()) {
+    <p class="status">Carregando o perfil…</p>
+  } @else if (loadError(); as message) {
+    <p class="alert" role="alert">{{ message }}</p>
+  } @else {
+    <p class="eyebrow">Cliente</p>
+    <h1>Editar perfil</h1>
+    <form class="card" (submit)="save($event)">
+      @if (problem() === 'email') {
+        <p class="alert" role="alert">
+          Esse email já está cadastrado, não gostaria de recuperar sua senha?
+          <a href="#recuperacao-de-senha" (click)="$event.preventDefault()">Recuperação de senha está em desenvolvimento (WIP)</a>
+        </p>
+      } @else if (problem() === 'other') {
+        <p class="alert" role="alert">Não foi possível atualizar o perfil.</p>
+      }
+      @if (notice(); as message) {
+        <p class="banner good" role="status">{{ message }}</p>
+      }
+      <label for="profile-username">Usuário
+        <input id="profile-username" [value]="username()" disabled />
+      </label>
+      <label for="profile-first">Nome
+        <input id="profile-first" autocomplete="given-name" [value]="firstName()" (input)="firstName.set(valueOf($event))" [disabled]="saving()" />
+      </label>
+      <label for="profile-last">Sobrenome
+        <input id="profile-last" autocomplete="family-name" [value]="lastName()" (input)="lastName.set(valueOf($event))" [disabled]="saving()" />
+      </label>
+      <label for="profile-email">E-mail
+        <input id="profile-email" type="email" autocomplete="email" [value]="email()" (input)="email.set(valueOf($event))" [disabled]="saving()" />
+      </label>
+      <button type="submit" [disabled]="saving()">{{ saving() ? 'Salvando…' : 'Salvar' }}</button>
+    </form>
+  }
+</div>

@@ -33,6 +33,7 @@ export class AuthService {
   readonly signedIn = signal(false);
   readonly username = signal<string | null>(null);
   readonly initError = signal<string | null>(null);
+  readonly sessionReady = signal(false);
   private ready: Promise<void> | null = null;
 
   init(): Promise<void> {
@@ -46,29 +47,33 @@ export class AuthService {
   // before painting, so / stayed white. The home form signs in through the API.
   private async start(): Promise<void> {
     try {
-      const authenticated = await this.keycloak.init({
-        pkceMethod: 'S256',
-        checkLoginIframe: false,
-        redirectUri: `${window.location.origin}/account`,
-        scope: 'profile email',
-        responseMode: 'query',
-        enableLogging: !environment.production,
-      });
-      if (authenticated) {
-        this.applySession(true);
+      try {
+        const authenticated = await this.keycloak.init({
+          pkceMethod: 'S256',
+          checkLoginIframe: false,
+          redirectUri: `${window.location.origin}/account`,
+          scope: 'profile email',
+          responseMode: 'query',
+          enableLogging: !environment.production,
+        });
+        if (authenticated) {
+          this.applySession(true);
+          return;
+        }
+      } catch {
+        this.initError.set(
+          'Keycloak did not answer at ' +
+            environment.keycloak.url +
+            '. Start the Compose stack and reload this page.',
+        );
+      }
+      if (await this.restore()) {
         return;
       }
-    } catch {
-      this.initError.set(
-        'Keycloak did not answer at ' +
-          environment.keycloak.url +
-          '. Start the Compose stack and reload this page.',
-      );
+      this.applySession(false);
+    } finally {
+      this.sessionReady.set(true);
     }
-    if (await this.restore()) {
-      return;
-    }
-    this.applySession(false);
   }
 
   login(username: string, password: string): Promise<void> {

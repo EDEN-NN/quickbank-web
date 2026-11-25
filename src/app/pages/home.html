@@ -1,3 +1,34 @@
+@if (!auth.sessionReady()) {
+  <p class="status gate-wait" lang="pt-BR">Carregando…</p>
+} @else if (auth.signedIn()) {
+  <section class="dashboard" lang="pt-BR">
+    <p class="eyebrow">Conta</p>
+    <h1>Olá{{ auth.username() ? ', ' + auth.username() : '' }}</h1>
+    <p class="lede">Escolha o que você quer consultar.</p>
+    <div class="dash-grid">
+      <a class="dash-card" routerLink="/statement">
+        <span>Extrato</span>
+        <small>Movimentos e saldo</small>
+      </a>
+      <a class="dash-card" routerLink="/credit">
+        <span>Crédito</span>
+        <small>Limite em uso e disponível</small>
+      </a>
+      <a class="dash-card" routerLink="/profile">
+        <span>Editar perfil</span>
+        <small>Nome e e-mail</small>
+      </a>
+      <a class="dash-card" routerLink="/account" fragment="deposito">
+        <span>Depósito</span>
+        <small>Entrada de caixa</small>
+      </a>
+      <a class="dash-card" routerLink="/account" fragment="transferencia">
+        <span>Transferência</span>
+        <small>Enviar para outra conta</small>
+      </a>
+    </div>
+  </section>
+} @else {
 <div class="gate" lang="pt-BR">
   <div class="gate-row">
     <form class="panel login" (submit)="submitLogin($event)">
@@ -97,3 +128,4 @@
     </form>
   </div>
 </div>
+}

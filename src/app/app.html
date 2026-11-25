@@ -1,18 +1,25 @@
 <header class="site">
   <a class="mark" routerLink="/">QuickBank</a>
-  <nav>
-    @if (auth.signedIn()) {
-      <a routerLink="/account">Account</a>
-      <a routerLink="/statement">Statement</a>
-    }
-  </nav>
   @if (auth.signedIn()) {
+    <button type="button" class="drawer-toggle" (click)="drawerOpen.set(!drawerOpen())">Menu</button>
     <div class="session">
       @if (auth.username(); as name) {
         <span class="who">{{ name }}</span>
       }
-      <button type="button" class="quiet" (click)="auth.signOut()">Sign out</button>
+      <button type="button" class="quiet" (click)="auth.signOut()">Sair</button>
     </div>
   }
 </header>
-<router-outlet />
+@if (auth.signedIn()) {
+  <div class="shell">
+    @if (drawerOpen()) {
+      <button type="button" class="backdrop" aria-label="Fechar menu" (click)="drawerOpen.set(false)"></button>
+    }
+    <app-drawer [open]="drawerOpen()" (navigated)="drawerOpen.set(false)" />
+    <main class="shell-main">
+      <router-outlet />
+    </main>
+  </div>
+} @else {
+  <router-outlet />
+}

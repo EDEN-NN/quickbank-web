@@ -1,0 +1,30 @@
+<aside class="drawer" [class.open]="open()" lang="pt-BR">
+  <p class="drawer-kicker">QuickBank</p>
+  <p class="drawer-title">Sua mesa</p>
+  <nav>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="close()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20H4z"/></svg>
+      Início
+    </a>
+    <a routerLink="/statement" routerLinkActive="active" (click)="close()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM8 8h8M8 12h8M8 16h5"/></svg>
+      Extrato
+    </a>
+    <a routerLink="/credit" routerLinkActive="active" (click)="close()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16v10H4zM4 11h16M8 15h4"/></svg>
+      Crédito
+    </a>
+    <a routerLink="/profile" routerLinkActive="active" (click)="close()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-7 8a7 7 0 0 1 14 0"/></svg>
+      Editar perfil
+    </a>
+    <a routerLink="/account" fragment="deposito" (click)="close()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12m0 0-4-4m4 4 4-4M5 20h14"/></svg>
+      Depósito
+    </a>
+    <a routerLink="/account" fragment="transferencia" (click)="close()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      Transferência
+    </a>
+  </nav>
+</aside>

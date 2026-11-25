@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Account, DepositReceipt, StatementLine, TransferReceipt } from './models';
+import { Account, Credit, DepositReceipt, Profile, StatementLine, TransferReceipt } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class QuickBankApi {
@@ -35,6 +35,24 @@ export class QuickBankApi {
     return firstValueFrom(
       this.http.get<DepositReceipt>(`${this.base}/api/deposits/${encodeURIComponent(id)}`),
     );
+  }
+
+  profile(): Promise<Profile> {
+    return firstValueFrom(this.http.get<Profile>(`${this.base}/api/profile`));
+  }
+
+  updateProfile(email: string, firstName: string, lastName: string): Promise<Profile> {
+    return firstValueFrom(
+      this.http.put<Profile>(`${this.base}/api/profile`, { email, firstName, lastName }),
+    );
+  }
+
+  credit(): Promise<Credit> {
+    return firstValueFrom(this.http.get<Credit>(`${this.base}/api/accounts/me/credit`));
+  }
+
+  changeCredit(creditLimit: string): Promise<Credit> {
+    return firstValueFrom(this.http.put<Credit>(`${this.base}/api/accounts/me/credit`, { creditLimit }));
   }
 
   transfer(toAccountNumber: string, amount: string, idempotencyKey: string): Promise<TransferReceipt> {

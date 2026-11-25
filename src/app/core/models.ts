@@ -26,6 +26,21 @@ export interface DepositReceipt {
   currency: string;
 }
 
+export interface Profile {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface Credit {
+  creditLimit: string;
+  creditLimitMax: string;
+  creditUsed: string;
+  creditAvailable: string;
+  currency: string;
+}
+
 export interface TransferReceipt {
   transferId: string;
   fromAccount: string;
