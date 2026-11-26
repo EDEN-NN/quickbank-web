@@ -1,0 +1,107 @@
+@if (!auth.sessionReady()) {
+  <p class="status gate-wait landing" lang="pt-BR">Carregando…</p>
+} @else if (!auth.signedIn()) {
+  <div class="gate" lang="pt-BR">
+    <div class="gate-row gate-single">
+      @if (mode() === 'login') {
+        <form class="panel login" (submit)="submitLogin($event)">
+          <h1>Entrar</h1>
+          @if (loginFailed()) {
+            <p class="alert" role="alert">Não foi possível acessar sua conta. Login ou senha invalidos.</p>
+          }
+          <label for="login-username">Usuário
+            <input
+              id="login-username"
+              name="username"
+              autocomplete="username"
+              [value]="loginUsername()"
+              (input)="loginUsername.set(valueOf($event))"
+              [disabled]="submittingLogin()"
+            />
+          </label>
+          <label for="login-password">Senha
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              [value]="loginPassword()"
+              (input)="loginPassword.set(valueOf($event))"
+              [disabled]="submittingLogin()"
+            />
+          </label>
+          <button type="submit" [disabled]="submittingLogin()">{{ submittingLogin() ? 'Entrando…' : 'Entrar' }}</button>
+          <p class="switch">Não tem uma conta ainda? <a routerLink="/cadastro">Abrir conta</a></p>
+        </form>
+      } @else {
+        <form class="panel register" (submit)="submitSignup($event)">
+          <h2>Não tem uma conta ainda? Cadastre-se aqui</h2>
+          @if (signupProblem() === 'email') {
+            <p class="alert" role="alert">
+              Esse email já está cadastrado, não gostaria de recuperar sua senha?
+              <a href="#recuperacao-de-senha" (click)="$event.preventDefault()">Recuperação de senha está em desenvolvimento (WIP)</a>
+            </p>
+          } @else if (signupProblem() === 'other') {
+            <p class="alert" role="alert">Não foi possível concluir o cadastro.</p>
+          }
+          <label for="signup-username">Usuário
+            <input
+              id="signup-username"
+              name="username"
+              autocomplete="username"
+              spellcheck="false"
+              [value]="signupUsername()"
+              (input)="signupUsername.set(valueOf($event))"
+              [disabled]="submittingSignup()"
+            />
+          </label>
+          <label for="signup-first-name">Nome
+            <input
+              id="signup-first-name"
+              name="given-name"
+              autocomplete="given-name"
+              [value]="signupFirstName()"
+              (input)="signupFirstName.set(valueOf($event))"
+              [disabled]="submittingSignup()"
+            />
+          </label>
+          <label for="signup-last-name">Sobrenome
+            <input
+              id="signup-last-name"
+              name="family-name"
+              autocomplete="family-name"
+              [value]="signupLastName()"
+              (input)="signupLastName.set(valueOf($event))"
+              [disabled]="submittingSignup()"
+            />
+          </label>
+          <label for="signup-email">E-mail
+            <input
+              id="signup-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              [value]="signupEmail()"
+              (input)="signupEmail.set(valueOf($event))"
+              [disabled]="submittingSignup()"
+            />
+          </label>
+          <label for="signup-password">Senha
+            <input
+              id="signup-password"
+              name="password"
+              type="password"
+              autocomplete="new-password"
+              [value]="signupPassword()"
+              (input)="signupPassword.set(valueOf($event))"
+              [disabled]="submittingSignup()"
+            />
+            <span class="hint">Mínimo de 8 caracteres.</span>
+          </label>
+          <button type="submit" [disabled]="submittingSignup()">{{ submittingSignup() ? 'Cadastrando…' : 'Cadastrar' }}</button>
+          <p class="switch">Já tem conta? <a routerLink="/entrar">Entrar</a></p>
+        </form>
+      }
+    </div>
+  </div>
+}

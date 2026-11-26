@@ -8,6 +8,11 @@
       }
       <button type="button" class="quiet" (click)="auth.signOut()">Sair</button>
     </div>
+  } @else if (auth.sessionReady()) {
+    <nav class="public-nav">
+      <a routerLink="/entrar">Entrar</a>
+      <a class="public-cta" routerLink="/cadastro">Abrir conta</a>
+    </nav>
   }
 </header>
 @if (auth.signedIn()) {

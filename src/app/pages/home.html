@@ -1,5 +1,5 @@
 @if (!auth.sessionReady()) {
-  <p class="status gate-wait" lang="pt-BR">Carregando…</p>
+  <p class="status gate-wait landing" lang="pt-BR">Carregando…</p>
 } @else if (auth.signedIn()) {
   <section class="dashboard" lang="pt-BR">
     <p class="eyebrow">Conta</p>
@@ -29,103 +29,90 @@
     </div>
   </section>
 } @else {
-<div class="gate" lang="pt-BR">
-  <div class="gate-row">
-    <form class="panel login" (submit)="submitLogin($event)">
-      <h1>Entrar</h1>
-      @if (loginFailed()) {
-        <p class="alert" role="alert">Não foi possível acessar sua conta. Login ou senha invalidos.</p>
-      }
-      <label for="login-username">Usuário
-        <input
-          id="login-username"
-          name="username"
-          autocomplete="username"
-          [value]="loginUsername()"
-          (input)="loginUsername.set(valueOf($event))"
-          [disabled]="submittingLogin()"
-        />
-      </label>
-      <label for="login-password">Senha
-        <input
-          id="login-password"
-          name="password"
-          type="password"
-          autocomplete="current-password"
-          [value]="loginPassword()"
-          (input)="loginPassword.set(valueOf($event))"
-          [disabled]="submittingLogin()"
-        />
-      </label>
-      <button type="submit" [disabled]="submittingLogin()">{{ submittingLogin() ? 'Entrando…' : 'Entrar' }}</button>
-    </form>
-
-    <form class="panel register" (submit)="submitSignup($event)">
-      <h2>Não tem uma conta ainda? Cadastre-se aqui</h2>
-      @if (signupProblem() === 'email') {
-        <p class="alert" role="alert">
-          Esse email já está cadastrado, não gostaria de recuperar sua senha?
-          <a href="#recuperacao-de-senha" (click)="$event.preventDefault()">Recuperação de senha está em desenvolvimento (WIP)</a>
+  <article class="landing" lang="pt-BR">
+    <section class="landing-hero">
+      <div>
+        <p class="eyebrow">Banco noturno</p>
+        <h1>Crédito que se libera sem fila.</h1>
+        <p class="lede">
+          A QuickBank é para quem quer limite claro, um cartão à altura de cliente VIP
+          e gente do outro lado quando o expediente está aberto.
         </p>
-      } @else if (signupProblem() === 'other') {
-        <p class="alert" role="alert">Não foi possível concluir o cadastro.</p>
-      }
-      <label for="signup-username">Usuário
-        <input
-          id="signup-username"
-          name="username"
-          autocomplete="username"
-          spellcheck="false"
-          [value]="signupUsername()"
-          (input)="signupUsername.set(valueOf($event))"
-          [disabled]="submittingSignup()"
-        />
-      </label>
-      <label for="signup-first-name">Nome
-        <input
-          id="signup-first-name"
-          name="given-name"
-          autocomplete="given-name"
-          [value]="signupFirstName()"
-          (input)="signupFirstName.set(valueOf($event))"
-          [disabled]="submittingSignup()"
-        />
-      </label>
-      <label for="signup-last-name">Sobrenome
-        <input
-          id="signup-last-name"
-          name="family-name"
-          autocomplete="family-name"
-          [value]="signupLastName()"
-          (input)="signupLastName.set(valueOf($event))"
-          [disabled]="submittingSignup()"
-        />
-      </label>
-      <label for="signup-email">E-mail
-        <input
-          id="signup-email"
-          name="email"
-          type="email"
-          autocomplete="email"
-          [value]="signupEmail()"
-          (input)="signupEmail.set(valueOf($event))"
-          [disabled]="submittingSignup()"
-        />
-      </label>
-      <label for="signup-password">Senha
-        <input
-          id="signup-password"
-          name="password"
-          type="password"
-          autocomplete="new-password"
-          [value]="signupPassword()"
-          (input)="signupPassword.set(valueOf($event))"
-          [disabled]="submittingSignup()"
-        />
-        <span class="hint">Mínimo de 8 caracteres.</span>
-      </label>
-      <button type="submit" [disabled]="submittingSignup()">{{ submittingSignup() ? 'Cadastrando…' : 'Cadastrar' }}</button>
-    </form>
-  </div>
-</div>
+        <div class="landing-cta">
+          <a class="cta solid" routerLink="/entrar">Entrar</a>
+          <a class="cta ghost" routerLink="/cadastro">Abrir conta</a>
+        </div>
+      </div>
+      <aside class="landing-mark">
+        <p>Cashback</p>
+        <strong>5%</strong>
+        <span>em compras acima de R$ 500</span>
+      </aside>
+    </section>
+
+    <section class="band" id="credito">
+      <div class="band-inner">
+        <div class="band-copy">
+          <p class="eyebrow">Crédito</p>
+          <h2>Facilidade de liberação</h2>
+          <p class="credit-offer">até <strong>R$ 2.000</strong> após a abertura da conta</p>
+          <p>O limite entra junto com a conta. Você consulta o disponível e ajusta o uso sem fila.</p>
+        </div>
+        <div class="band-visual visual-credit" aria-hidden="true">
+          <span class="visual-kicker">Teto na abertura</span>
+          <strong>R$ 2.000</strong>
+          <span class="bar"><span></span></span>
+          <span class="visual-note">disponível para usar</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="band flip" id="cashback">
+      <div class="band-inner">
+        <div class="band-copy">
+          <p class="eyebrow">Compras</p>
+          <h2>5% de cashback</h2>
+          <p>Compras acima de R$ 500 devolvem 5% em cashback.</p>
+        </div>
+        <div class="band-visual visual-cash" aria-hidden="true">
+          <strong>5%</strong>
+          <span>acima de R$ 500</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="vip">
+      <div class="band-inner">
+        <div class="band-copy">
+          <p class="eyebrow">Cartões</p>
+          <h2>Cartões para clientes VIP</h2>
+          <p>Quem concentra a vida financeira aqui recebe um cartão VIP, com tratamento próprio.</p>
+        </div>
+        <div class="band-visual visual-card" aria-hidden="true">
+          <span class="chip"></span>
+          <span class="card-name">VIP</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="indicacao">
+      <div class="band-inner">
+        <article class="support-box">
+          <p class="eyebrow">Indicação</p>
+          <h2>Indicou um amigo, ganhou</h2>
+          <p>Indique um amigo. Quando a conta nova abre, a indicação vira recompensa para quem chamou.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="band" id="suporte">
+      <div class="band-inner">
+        <article class="support-box">
+          <h2>Horário de atendimento</h2>
+          <p class="support-hours">Das 08h às 18h</p>
+          <p>Atendimento focado em áreas como cartão, crédito, financiamento e outros assuntos.</p>
+        </article>
+      </div>
+    </section>
+  </article>
 }

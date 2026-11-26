@@ -8,5 +8,5 @@ export const authGuard: CanActivateFn = async () => {
   if (auth.signedIn()) {
     return true;
   }
-  return inject(Router).createUrlTree(['/']);
+  return inject(Router).createUrlTree(['/entrar']);
 };
